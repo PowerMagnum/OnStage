@@ -1,0 +1,31 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 250px;
+}
+
+html{
+    height: 100%;
+}
+body{
+    height: 100%;
+    width: 100%;
+    flex-direction: column;
+    
+}
+
+* {
+    box-sizing: border-box;
+}
+
+:root{
+    --color1: #003366;
+    --color2: #336699;
+    --color3: #6699cc;
+    --color4: #99CCFF;
+    --color5: #99CCCC;
+    --color6: #F0F8FF;
+}

@@ -1,0 +1,64 @@
+@font-face {
+    font-family: main;
+    src: url("../fonts/Nunito-Bold.ttf");
+}
+
+#header{
+    display: flex;
+    align-items:  center;
+    justify-content: center;
+    justify-self: start;
+    width: 100%;
+    font-family: main;
+    background-color: var(--color1);
+    color: var(--color6);
+}
+
+#header>h1{
+    margin: 5px;
+}
+
+#content{
+    flex: 1;
+    display: grid;
+    width: 100%;
+    gap: 20px;
+    padding: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-auto-rows: max-content;
+    overflow-y: auto;
+    background-color: var(--color4);
+}
+
+.screen-icon{
+    aspect-ratio: 16/9;
+    background-image: url("../img/screen.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: main;
+    font-size: 5ch;
+    cursor: pointer;
+    user-select: none;
+    /*border: solid 1px black;*/
+}
+
+.screen-icon:hover{
+    filter: drop-shadow(0 0 0.5rem var(--color2));
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+}
+::-webkit-scrollbar-track {
+background: var(--color5);
+}
+::-webkit-scrollbar-thumb {
+background: var(--color3)
+}
+::-webkit-scrollbar-thumb:hover {
+background: var(--color2);
+}
