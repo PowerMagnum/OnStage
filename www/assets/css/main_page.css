@@ -49,16 +49,3 @@
 .screen-icon:hover{
     filter: drop-shadow(0 0 0.5rem var(--color2));
 }
-
-::-webkit-scrollbar {
-    width: 10px;
-}
-::-webkit-scrollbar-track {
-background: var(--color5);
-}
-::-webkit-scrollbar-thumb {
-background: var(--color3)
-}
-::-webkit-scrollbar-thumb:hover {
-background: var(--color2);
-}
