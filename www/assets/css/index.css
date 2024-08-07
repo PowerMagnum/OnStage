@@ -24,6 +24,8 @@ body{
     --color4: #99CCFF;
     --color5: #99CCCC;
     --color6: #F0F8FF;
+    --AR_width: 16;
+    --AR_height: 9;
 }
 
 ::-webkit-scrollbar {
@@ -37,4 +39,9 @@ background: var(--color3)
 }
 ::-webkit-scrollbar-thumb:hover {
 background: var(--color2);
+}
+
+@font-face {
+    font-family: main;
+    src: url("../fonts/Nunito-Bold.ttf");
 }

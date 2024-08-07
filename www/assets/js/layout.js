@@ -1,9 +1,11 @@
 function resizeEditor() {
+    const style = getComputedStyle(document.body);
+
     const slideEditorArea = document.getElementById('slideEditorArea');
     const slideEditor = document.getElementById('slideEditor');
     
-    let width = 16;
-    let height = 9
+    let width = style.getPropertyValue('--AR_width');
+    let height = style.getPropertyValue('--AR_height');
 
     const areaWidth = slideEditorArea.offsetWidth;
     const areaHeight = slideEditorArea.offsetHeight;
@@ -18,10 +20,21 @@ function resizeEditor() {
         slideEditor.style.height = "auto";
         slideEditor.style.margin = "auto 0";
     }
-
-    console.log("test")
+    console.log("ok");
 }
 
-// Chiama la funzione per impostare i margini all'inizio e al ridimensionamento
+function changeAspectRatio(){
+    let value = aspectRatioChanger.value.split("/");
+    let v_width = value[0];
+    let v_heigh = value[1];
+    const root = document.querySelector(':root')
+    root.style.setProperty('--AR_width', v_width);
+    root.style.setProperty('--AR_height', v_heigh);
+    resizeEditor();
+    console.log("suca");
+}
+
+const aspectRatioChanger = document.getElementById('aspectRatioChanger');
 window.addEventListener('load', resizeEditor);
 window.addEventListener('resize', resizeEditor);
+aspectRatioChanger.addEventListener('change', changeAspectRatio);

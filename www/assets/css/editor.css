@@ -3,6 +3,18 @@
     grid-area: header;
 }
 
+#content{
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-rows: 7% 60% 33%; 
+  grid-template-columns: 1fr 4fr;
+  grid-template-areas: "header header"
+                       "slides editor"
+                       "slides controls";
+  background: var(--color3);
+}
+
 #slideCarousel{
     background: var(--color4);
     grid-area: slides;
@@ -27,7 +39,7 @@
 }
  
 #slideEditor{
-    aspect-ratio: 16/9;
+    aspect-ratio: var(--AR_width) / var(--AR_height);
     border: 1px solid var(--color1);
     margin: 0 auto;
     background: var(--color2);
@@ -39,27 +51,76 @@
     border-top: 1px solid var(--color1);
     background: var(--color3);
     grid-area: controls;
-
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    padding: 5px;
+    font-family: main;
 }
 
-#content{
-    width: 100%;
-    height: 100%;
-    display: grid;
-    grid-template-rows: 7% 60% 33%; 
-    grid-template-columns: 1fr 4fr;
-    grid-template-areas: "header header"
-                         "slides editor"
-                         "slides controls";
-    background: var(--color3);
+#controlPanel>div{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  width: 30%;
 }
+#controlPanel>div>*{
+  border-radius: 10px;
+}
+
+#controlPanel #fowardControl{
+  background: url("../img/avanti.png");
+}
+#controlPanel #backwardControl{
+  background: url("../img/indietro.png");
+}
+#controlPanel>.controlArea>button{
+  width: 100%;
+  height: 40%;
+  background-size: contain !important;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
+  border: 0;
+}
+#controlPanel>.pulsantiera>button{
+  width: 100%;
+  height: 40%;
+  background-color: var(--color3);
+  border: 2px solid var(--color2);
+  font-family: main;
+  color: var(--color1);
+  font-size: 100%;
+}
+
+#controlPanel button:hover{
+  filter: drop-shadow(0 0 10px var(--color2));
+}
+#controlPanel button:active{
+  filter: brightness(150%)
+}
+
+#controlPanel>.screenControls>*{
+  text-align: center;
+  font-family: main;
+}
+#controlPanel>.screenControls>.userInteract{
+  color: var(--color1);
+  background: var(--color3);
+  border: 1px solid var(--color2);
+}
+#controlPanel>.screenControls>.userInteract::placeholder{
+  color: var(--color2);
+}
+
 
 .carouselSlide{
-    aspect-ratio: 16/9;
-    background-image: url("../img/screen.png");
-    background-size: contain;
+    aspect-ratio: var(--AR_width) / var(--AR_height);
+    background-image: url("../img/default.jpg");
+    background-size: 100% 100%;
     background-repeat: no-repeat;
     background-position: center;
+    background-attachment:local;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -72,6 +133,18 @@
     width: 90%;
     height: auto;
     flex: 1 0 auto;
+    border-radius: 10px;
+}
+
+.active {
+  border: 5px solid red;
+  font-family: main;
+  font-size: 2vw;
+  color: red;
+  text-shadow: 6px 3px 4px var(--color1), -2px -1px 3px var(--color6);
+}
+.active::after{
+  content: "Slide Attiva";
 }
 
 @media (max-aspect-ratio: 4/3){
@@ -95,4 +168,7 @@
       height: 100%;
     }
 
+    .active {
+      font-size: 3vh;
+    }
   }

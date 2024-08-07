@@ -1,8 +1,3 @@
-@font-face {
-    font-family: main;
-    src: url("../fonts/Nunito-Bold.ttf");
-}
-
 #header{
     display: flex;
     align-items:  center;

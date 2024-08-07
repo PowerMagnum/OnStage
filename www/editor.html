@@ -19,7 +19,7 @@
             </div>
             <div class="carouselSlide">
             </div>
-            <div class="carouselSlide">
+            <div class="carouselSlide active">
             </div>
             <div class="carouselSlide">
             </div>
@@ -34,13 +34,28 @@
             <div id="slideEditor"></div>
         </div>
         <div id="controlPanel">
-            <button>Inserisci sfondo</button>
-            <button>Inserisci miniatura</button>
-            
-            <input type="number" placeholder="durata slide">
-            <input type="checkbox" id="slideLoop"><label for="slideLoop">Loop delle slide</label>
-            <button>Avanti</button>
-            <button>Indietro</button>
+            <div class="pulsantiera">
+                <button id="setBackground">Imposta sfondo</button>
+                <button id="insertMedia">Inserisci miniatura</button>
+            </div>
+            <div class="screenControls">
+                <input type="number" placeholder="durata slide" class="userInteract">
+                <select name="ratio" class="userInteract" id="aspectRatioChanger">
+                    <option value="16/9">16:9</option>
+                    <option value="4/3">4:3</option>
+                    <option value="9/16">9:16</option>
+                    <option value="1/1">1:1</option>
+                    <option value="5/3">5:3</option>
+                </select>
+                <div>
+                    <input type="checkbox" id="slideLoop">
+                    <label for="slideLoop">Loop delle slide</label>
+                </div>
+            </div>
+            <div class="controlArea">
+                <button id="fowardControl"></button>
+                <button id="backwardControl"></button>
+            </div>
         </div>
     </div>
     <script src="assets/js/layout.js"></script>
