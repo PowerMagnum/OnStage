@@ -28,6 +28,13 @@ body{
     --AR_height: 9;
 }
 
+button:hover{
+    filter: drop-shadow(0 0 10px var(--color2));
+}
+button:active{
+    filter: brightness(150%)
+}
+
 ::-webkit-scrollbar {
     width: 10px;
 }

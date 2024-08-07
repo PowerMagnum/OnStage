@@ -1,6 +1,26 @@
 #header{
     background: var(--color1);
     grid-area: header;
+    display: flex;
+    color: var(--color6);
+    font-family: main;
+    align-items: center;
+    justify-content: center;
+}
+#header>h4{
+  margin: 0;
+  font-size: 2vmax;
+  text-align: center;
+}
+#header>button{
+  position: absolute;
+  right: 1vw;
+  background-color: var(--color2);
+  border: 2px solid var(--color6);
+  font-family: main;
+  color: var(--color6);
+  font-size: 1.5vmax;
+  text-align: center;
 }
 
 #content{
@@ -43,6 +63,11 @@
     border: 1px solid var(--color1);
     margin: 0 auto;
     background: var(--color2);
+    background-image: url("../img/default.jpg");
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-attachment:local;
     max-width: 100%;
     max-height: 100%;
 }
@@ -90,19 +115,13 @@
   border: 2px solid var(--color2);
   font-family: main;
   color: var(--color1);
-  font-size: 100%;
-}
-
-#controlPanel button:hover{
-  filter: drop-shadow(0 0 10px var(--color2));
-}
-#controlPanel button:active{
-  filter: brightness(150%)
+  font-size: 2vmax;
 }
 
 #controlPanel>.screenControls>*{
   text-align: center;
   font-family: main;
+  font-size: 1.5vmax;
 }
 #controlPanel>.screenControls>.userInteract{
   color: var(--color1);
@@ -140,6 +159,8 @@
   border: 5px solid red;
   font-family: main;
   font-size: 2vw;
+  text-wrap: wrap;
+  text-align: center;
   color: red;
   text-shadow: 6px 3px 4px var(--color1), -2px -1px 3px var(--color6);
 }
@@ -149,7 +170,7 @@
 
 @media (max-aspect-ratio: 4/3){
     #content {
-      grid-template-rows: 10% 15% minmax(auto, 50%) minmax(25%, auto);
+      grid-template-rows: 5% 15% minmax(auto, 55%) 25%;
       grid-template-columns: 1fr; 
       grid-template-areas: "header"
                           "slides"
@@ -169,6 +190,6 @@
     }
 
     .active {
-      font-size: 3vh;
+      font-size: 2.5vw;
     }
   }
