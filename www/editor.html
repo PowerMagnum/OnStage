@@ -38,8 +38,10 @@
         </div>
         <div id="controlPanel">
             <div class="pulsantiera">
-                <button id="setBackground">Imposta sfondo</button>
-                <button id="insertMedia">Inserisci miniatura</button>
+                <input type="file" hidden id="fileSelector"/>
+                <button id="fileSelectorButton">Scegli un file</button>
+                <button id="Carica_Sfondo">Carica sfondo</button>
+                <button id="Carica_Miniatura">Carica miniatura</button>
             </div>
             <div class="screenControls">
                 <input type="number" placeholder="durata slide" class="userInteract">
@@ -56,11 +58,12 @@
                 </div>
             </div>
             <div class="controlArea">
-                <button id="fowardControl"></button>
-                <button id="backwardControl"></button>
+                <button class="cliccabile" id="fowardControl"></button>
+                <button class="cliccabile" id="backwardControl"></button>
             </div>
         </div>
     </div>
     <script src="assets/js/layout.js"></script>
+    <script src="assets/js/loadFiles.js"></script>
 </body>
 </html>

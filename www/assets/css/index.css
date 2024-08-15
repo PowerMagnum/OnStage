@@ -24,6 +24,7 @@ body{
     --color4: #99CCFF;
     --color5: #99CCCC;
     --color6: #F0F8FF;
+    --loadColor: #48c048; 
     --AR_width: 16;
     --AR_height: 9;
 }
