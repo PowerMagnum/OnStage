@@ -24,7 +24,8 @@ body{
     --color4: #99CCFF;
     --color5: #99CCCC;
     --color6: #F0F8FF;
-    --loadColor: #48c048; 
+    --loadColor: #48c048;
+    --trasparentBack: #00112299;
     --AR_width: 16;
     --AR_height: 9;
 }
@@ -35,6 +36,10 @@ button:hover{
 button:active{
     filter: brightness(150%)
 }
+.forceHidden{
+    display: none !important;
+}
+
 
 ::-webkit-scrollbar {
     width: 10px;

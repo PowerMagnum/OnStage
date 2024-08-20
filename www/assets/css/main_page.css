@@ -1,5 +1,14 @@
+#pageLayout {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+}
+
 #header{
     display: flex;
+    position: sticky;
+    top: 0;
     align-items:  center;
     justify-content: center;
     justify-self: start;
@@ -7,10 +16,27 @@
     font-family: main;
     background-color: var(--color1);
     color: var(--color6);
+    z-index: 10;
 }
 
 #header>h1{
     margin: 5px;
+    z-index: 10;
+}
+
+#header>button{
+    position: absolute;
+    right: 1vw;
+    background-color: var(--color2);
+    border: 2px solid var(--color6);
+    font-family: main;
+    color: var(--color6);
+    font-size: 1.5vmax;
+    text-align: center;
+    z-index: 10;
+}
+#header>#logoffButton{
+    display: none;
 }
 
 #content{
@@ -31,16 +57,109 @@
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
-    display: flex;
-    justify-content: center;
+    padding: 5%;
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    grid-template-areas: "name delete"
+                         "name edit";
+    gap: 5px;
+    justify-items: center;
     align-items: center;
     font-family: main;
     font-size: 5ch;
     cursor: pointer;
     user-select: none;
+    position: relative;
     /*border: solid 1px black;*/
 }
 
 .screen-icon:hover{
     filter: drop-shadow(0 0 0.5rem var(--color2));
+}
+
+
+.screen-icon>.deleteButton{
+    background: url("../img/delete.png");
+    background-color: brown;
+    grid-area: delete;
+}
+.screen-icon>.editButton{
+    background: url("../img/edit.png");
+    background-color:chocolate;
+    grid-area: edit;
+}
+.screen-icon>button{
+    background-size: 75% !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+    border: 1px solid var(--color6);
+    border-radius: 50%;
+    aspect-ratio: 1/1;
+    width: 50%;
+    height: auto;
+}
+.screen-icon>p{
+    grid-area: name;
+}
+#addScreen.screen-icon{
+    background-size: contain !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+    background: url("../img/addScreen.png");  
+    order: 1;
+}
+
+
+.loginBackground {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background: var(--trasparentBack);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.loginFormContainer {
+    position: absolute;
+    width: 75vmin;
+    height: 40vmin;
+    background: var(--color6);
+    border-radius: 10px;
+    display: none;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    box-shadow: 4px 4px 4px var(--color1), -3px -3px 6px var(--color2);
+}
+
+.loginFormContainer>input{
+    width: 90%;
+    height: 30%;
+    font-size: 2vmax;
+    font-family: main;
+    color: var(--color1);
+    border: 2px solid var(--color1);
+    text-align: center;
+    border-radius: 10px;
+}
+
+.loginFormContainer>input::placeholder{
+    color: var(--color2);
+}
+
+.loginFormContainer>button{
+    width: 90%;
+    height: 30%;
+    font-size: 2vmax;
+    font-family: main;
+    text-align: center;
+    color: var(--color1);
+    background-color: var(--color2);
+    border: 2px solid var(--color1);
+    border-radius: 10px;
 }
