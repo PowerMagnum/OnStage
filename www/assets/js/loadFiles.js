@@ -48,6 +48,9 @@ function uploadFile(callerButton) {
 
     xhr.onload = function () {
         if (xhr.status === 200) {
+            const fileName = xhr.responseText;
+            //TODO caricamento miniatura
+            renewBackground(fileName);
             button.innerText = 'Upload completato!';
             button.disabled = false;
             button.style.background = 'var(--loadColor)';
@@ -65,13 +68,11 @@ function uploadFile(callerButton) {
     xhr.send(formData);
 }
 
-function uploadAsBackground(){
-    uploadFile('Carica_Sfondo');
+function renewBackground(path){
+    path = path.replace(/\\/g, '/');
+    socket.emit("message", getCookie("code"), "updateSlideBackground", JSON.stringify({screenName:'Schermo' + thisScreen, slideId: selectedSlide, path: path}));
+    console.log("Invio richiesta rinnovo sfondo slide");
 }
 
-function uploadAsMiniature(){
-    uploadFile('Carica_Miniatura');
-}
-
-document.getElementById('Carica_Sfondo').onclick = uploadAsBackground;
-document.getElementById('Carica_Miniatura').onclick = uploadAsMiniature;
+document.getElementById('Carica_Sfondo').onclick = () => {uploadFile('Carica_Sfondo');};
+document.getElementById('Carica_Miniatura').onclick = () => {uploadFile('Carica_Miniatura')};

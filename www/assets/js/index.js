@@ -44,6 +44,7 @@ socket.on("connect", () => {
             console.log("Autenticazione riuscita");
         }else{
             console.log("Autenticazione fallita");
+            localHandler("authFail");
         }
         isUserLogged = result;
         localHandler("initPage");
@@ -56,5 +57,24 @@ socket.on("connect", () => {
     socket.on("updateScreens", () => {
         console.log("Il server emana ordine di refresh schermi");
         localHandler("updateScreens");
+    });
+
+    socket.on("updateSlides", (data) => {
+        console.log("Il server emana ordine di refresh slide");
+        localHandler("updateSlides", data);
+    });
+
+    socket.on("updateScreenSetting", (data) => {
+        console.log("Il server emana ordine di refresh impostazioni schermo");
+        localHandler("updateScreenSetting", data);
+    });
+
+    socket.on("updateCurrentSlide", (data) => {
+        console.log("Il server comunica lo scorrimento slide");
+        localHandler("updateCurrentSlide", data);
+    });
+
+    socket.on('reconnect_attempt', (attemptNumber) => {
+        console.log(`Tentativo di riconnessione ${attemptNumber} in corso`);
     });
 });

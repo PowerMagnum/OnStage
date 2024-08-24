@@ -14,30 +14,32 @@ function getScreens(){
     fetch('/screens')
     .then(response=>response.text())
     .then(data=>{
-        data = data.split(',');
-        data.forEach(screenName => {
-        const screenIcon = document.createElement('div');
-        screenIcon.className = 'screen-icon';
-        const screenCode = screenName.replace("Schermo","");
-        screenIcon.id = 'scr_' + screenCode;
-        const pElement = document.createElement('p');
-        pElement.textContent = screenCode;
-   
-        const editButton = document.createElement('button');
-        editButton.className = 'editButton loggedAction forceHidden';
-        editButton.onclick = () => {window.location="/editor.html?s=" + screenCode};
-        screenIcon.appendChild(editButton);
+        if (data != ''){
+            data = data.split(',');
+            data.forEach(screenName => {
+            const screenIcon = document.createElement('div');
+            screenIcon.className = 'screen-icon';
+            const screenCode = screenName.replace("Schermo","");
+            screenIcon.id = 'scr_' + screenCode;
+            const pElement = document.createElement('p');
+            pElement.textContent = screenCode;
+    
+            const editButton = document.createElement('button');
+            editButton.className = 'editButton loggedAction forceHidden';
+            editButton.onclick = () => {window.location="/editor.html?s=" + screenCode};
+            screenIcon.appendChild(editButton);
 
-        const deleteButton = document.createElement('button');
-        deleteButton.className = 'deleteButton loggedAction forceHidden';
-        deleteButton.onclick = () => {deleteScreen(screenCode)};
-        screenIcon.appendChild(deleteButton);
+            const deleteButton = document.createElement('button');
+            deleteButton.className = 'deleteButton loggedAction forceHidden';
+            deleteButton.onclick = () => {deleteScreen(screenCode)};
+            screenIcon.appendChild(deleteButton);
 
-        screenIcon.appendChild(pElement);
-        content.appendChild(screenIcon);
-        });
+            screenIcon.appendChild(pElement);
+            content.appendChild(screenIcon);
+            });
+        }      
         setLoggedView(isUserLogged);
-        fetchingScreen = false
+        fetchingScreen = false;
     });
 }
 
@@ -80,7 +82,6 @@ loginCodeSubmit.onclick = () => {
             loginBackground.click();
             socket.emit("authentication", getCookie("code"));
             isUserLogged = true;
-            alert("Accesso effettuato");
         }else{
             isUserLogged = false;
             alert("Codice errato");

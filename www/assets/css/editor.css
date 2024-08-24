@@ -46,6 +46,76 @@
     border: 1px solid var(--color1);
 }
 
+.carouselSlide{
+  aspect-ratio: var(--AR_width) / var(--AR_height);
+  background-image: url("../img/default.jpg");
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-attachment:local;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+  margin: 5px;
+  max-width: 90%;
+  max-height: 90%;
+  width: 90%;
+  height: auto;
+  flex: 0 0 auto;
+  border-radius: 10px;
+}
+
+#addSlide.carouselSlide{
+  background-image: url("../img/screen.png");
+  background-size: 100% 100% !important;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
+  background-attachment:local !important;
+  order: 1;
+}
+#addSlide.carouselSlide::after{
+  content: "";
+  width: 100%;
+  height: 100%;
+  background-image: url("../img/add.png");
+  background-size: contain;    
+  background-position: center; 
+  background-repeat: no-repeat;
+}
+
+.carouselSlide:hover{
+  filter: drop-shadow(0 0 0.5rem var(--color2));
+}
+.carouselSlide:active{
+  filter: brightness(150%)
+}
+
+.selected {
+  border: 5px solid var(--color1);
+  font-family: main;
+  font-size: 2vw;
+  text-wrap: wrap;
+  text-align: center;
+  color: var(--color1);
+  text-shadow: 6px 3px 4px var(--color1), -2px -1px 3px var(--color6);
+}
+
+.active {
+  border: 5px solid red;
+  font-family: main;
+  font-size: 2vw;
+  text-wrap: wrap;
+  text-align: center;
+  color: red;
+  text-shadow: 6px 3px 4px var(--color1), -2px -1px 3px var(--color6);
+}
+.active::after{
+  content: "Slide Attiva";
+}
+
 #slideEditorArea{
   margin: 0;
   background: var(--color6);
@@ -64,10 +134,10 @@
     margin: 0 auto;
     background: var(--color2);
     background-image: url("../img/default.jpg");
-    background-size: 100% 100%;
-    background-repeat: no-repeat;
-    background-position: center;
-    background-attachment:local;
+    background-size: 100% 100% !important;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+    background-attachment:local !important;
     max-width: 100%;
     max-height: 100%;
 }
@@ -146,42 +216,6 @@
 }
 #controlPanel>.screenControls>.userInteract::placeholder{
   color: var(--color2);
-}
-
-
-.carouselSlide{
-    aspect-ratio: var(--AR_width) / var(--AR_height);
-    background-image: url("../img/default.jpg");
-    background-size: 100% 100%;
-    background-repeat: no-repeat;
-    background-position: center;
-    background-attachment:local;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    user-select: none;
-    margin: 5px;
-    max-width: 90%;
-    max-height: 90%;
-    width: 90%;
-    height: auto;
-    flex: 1 0 auto;
-    border-radius: 10px;
-}
-
-.active {
-  border: 5px solid red;
-  font-family: main;
-  font-size: 2vw;
-  text-wrap: wrap;
-  text-align: center;
-  color: red;
-  text-shadow: 6px 3px 4px var(--color1), -2px -1px 3px var(--color6);
-}
-.active::after{
-  content: "Slide Attiva";
 }
 
 @media (max-aspect-ratio: 4/3){

@@ -20,21 +20,37 @@ function resizeEditor() {
         slideEditor.style.height = "auto";
         slideEditor.style.margin = "auto 0";
     }
-    console.log("ok");
+    //console.log("ok");
 }
 
-function changeAspectRatio(){
-    let value = aspectRatioChanger.value.split("/");
+function changeAspectRatio(ratio = null){
+    let value;
+    if (ratio != null){
+        aspectRatioChanger.value = ratio;
+    }else{
+        socket.emit("message", getCookie("code"), "updateScreenRatio", JSON.stringify({screenName:'Schermo' + thisScreen, newRatio: aspectRatioChanger.value}));
+        console.log("Invio richiesta aggiornamento aspect ratio");
+    }
+    value = aspectRatioChanger.value.split("/");
     let v_width = value[0];
     let v_heigh = value[1];
     const root = document.querySelector(':root')
     root.style.setProperty('--AR_width', v_width);
     root.style.setProperty('--AR_height', v_heigh);
     resizeEditor();
-    console.log("suca");
+    //console.log("suca");
+}
+
+function setLoopState(){
+    socket.emit("message", getCookie("code"), "updateLoopState", JSON.stringify({screenName:'Schermo' + thisScreen, value: slideLoopSelector.checked}));
+    console.log("Invio richiesta aggiornamento aspect ratio");
 }
 
 const aspectRatioChanger = document.getElementById('aspectRatioChanger');
+const slideLoopSelector = document.getElementById('slideLoop');
 window.addEventListener('load', resizeEditor);
 window.addEventListener('resize', resizeEditor);
-aspectRatioChanger.addEventListener('change', changeAspectRatio);
+aspectRatioChanger.addEventListener('change', () => {changeAspectRatio()});
+slideLoopSelector.addEventListener('change', setLoopState);
+const returnButton = document.getElementById("returnButton");
+returnButton.onclick = () => {window.location = "/"};

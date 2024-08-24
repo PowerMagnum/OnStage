@@ -10,7 +10,7 @@ serverExpress.use(express.static("./www"));
 serverExpress.use(express.urlencoded({extent:false}));
 serverExpress.use(express.json());
 
-const uploadDir = 'uploads/';
+const uploadDir = 'www/uploads/';
 if (!fs.existsSync(uploadDir)){
   fs.mkdirSync(uploadDir);
 }
@@ -33,7 +33,7 @@ const upload = multer({ storage: storage });
   
 serverExpress.post('/upload', upload.single('file'), (req, res) => {
     try {
-        res.send('File caricato con successo!');
+        res.send(req.file.path.replace(/^www\\/, ''));
     } catch (err) {
         res.status(400).send('Errore durante il caricamento del file.');
     }
@@ -63,6 +63,17 @@ serverExpress.get('/screens', (req, res) => {
     res.send(screens.toString());
 });
 
+serverExpress.get('/screens/:screenName', (req, res) => {
+    const screenName = req.params.screenName;
+    const filePath = screensDir + screenName;
+
+    if (fs.existsSync(filePath)) {
+        const fileContent = fs.readFileSync(filePath, 'utf8');
+        res.send(fileContent);
+    } else {
+        res.status(404).send('Screen not found');
+    }
+});
 
 function createToken(length) {
     const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_!?@$-";
@@ -73,6 +84,7 @@ function createToken(length) {
     return result;
 }  
 
+const { screenDefaultData, slideDefaultData, mediaDefaultData } = require('./defaultDataTemplate.js');
 /******************************
 ***** Protocollo SCREEN *******
 *******************************/
@@ -105,7 +117,7 @@ serverSocketIO.on('connection', (ws) => {
                         screensCount += 1;
                     }
                     console.log(screensCount);
-                    fs.writeFileSync(screensDir + 'Schermo' + (screensCount+1), JSON.stringify({ slides: [] }, null, 2));
+                    fs.writeFileSync(screensDir + 'Schermo' + (screensCount+1), JSON.stringify(screenDefaultData, null, 2));
                     ws.emit("message", "Schermo creato");
                     serverSocketIO.sockets.emit("updateScreens", "{}");
                     break;
@@ -129,18 +141,16 @@ serverSocketIO.on('connection', (ws) => {
                         break;
                     }
                     var screenData = JSON.parse(fs.readFileSync(screensDir + data['screenName']));
-                    var newSlide = {
-                        id: screenData.slides.length + 1,
-                        duration: 0,
-                        background: {
-                            path: "",
-                            type: "image"
-                        },
-                        multimedia: []
-                    };
+                    var newSlide = slideDefaultData;
+                    if (screenData.slides.length <= 0){
+                        newSlide['id'] = 0;
+                    }else{
+                        newSlide['id'] = screenData.slides.slice(-1).pop().id + 1;
+                    }
                     screenData.slides.push(newSlide);
                     fs.writeFileSync(screensDir + data['screenName'], JSON.stringify(screenData, null, 2));
                     ws.emit("message", "Slide aggiunta");
+                    serverSocketIO.sockets.emit("updateSlides", JSON.stringify({screenName: data['screenName']}));
                     break;
 
                 //socket.emit("message", "removeSlide", JSON.stringify({screenName:'Schermo4', slideIdToRemove:2}))
@@ -153,25 +163,91 @@ serverSocketIO.on('connection', (ws) => {
                     screenData.slides = screenData.slides.filter(slide => slide.id !== data['slideIdToRemove']);
                     fs.writeFileSync(screensDir + data['screenName'], JSON.stringify(screenData, null, 2));
                     ws.emit("message", "Slide rimossa");
+                    serverSocketIO.sockets.emit("updateSlides", JSON.stringify({screenName: data['screenName']}));
                     break;
                 
-                /*
-                case 'updateSlide':
-                    if (!fs.existsSync(screenPath)) {
-                        sendMessage(ws, 'error', 'Screen not found');
-                    } else {
-                        const screenData = JSON.parse(fs.readFileSync(screenPath));
-                        const slideIndex = screenData.slides.findIndex(s => s.id === slideId);
-                        if (slideIndex === -1) {
-                            sendMessage(ws, 'error', 'Slide not found');
-                        } else {
-                            screenData.slides[slideIndex] = { ...screenData.slides[slideIndex], ...updatedSlide };
-                            fs.writeFileSync(screenPath, JSON.stringify(screenData, null, 2));
-                            sendMessage(ws, 'slideUpdated', { slide: screenData.slides[slideIndex] });
-                        }
+                //socket.emit("message", getCookie("code"), "updateSlideBackground", JSON.stringify({screenName:'Schermo' + thisScreen, slideId: selectedSlide, path: path}));
+                case 'updateSlideBackground':
+                    if (!fs.existsSync(screensDir + data['screenName'])) {
+                        ws.emit("error", "Schermo inesistente");
+                        break;
                     }
+                    var screenData = JSON.parse(fs.readFileSync(screensDir + data['screenName']));
+                    screenData.slides.find(slide => slide.id === data['slideId']).background.path = data['path'];
+                    fs.writeFileSync(screensDir + data['screenName'], JSON.stringify(screenData, null, 2));
+                    ws.emit("message", "Background aggiornato");
+                    serverSocketIO.sockets.emit("updateSlides", JSON.stringify({screenName: data['screenName']}));
                     break;
-                */
+                
+                
+                case 'updateScreenRatio':
+                    if (!fs.existsSync(screensDir + data['screenName'])) {
+                        ws.emit("error", "Schermo inesistente");
+                        break;
+                    }
+                    var screenData = JSON.parse(fs.readFileSync(screensDir + data['screenName']));
+                    screenData.screenRatio = data['newRatio'];
+                    fs.writeFileSync(screensDir + data['screenName'], JSON.stringify(screenData, null, 2));
+                    screenData.slides = [];
+                    ws.emit("message", "Aspect ratio aggiornato");
+                    ws.broadcast.emit("updateScreenSetting", JSON.stringify({screenName: data['screenName'], screenData: screenData}));
+                    break;
+
+                case 'updateLoopState':
+                    if (!fs.existsSync(screensDir + data['screenName'])) {
+                        ws.emit("error", "Schermo inesistente");
+                        break;
+                    }
+                    var screenData = JSON.parse(fs.readFileSync(screensDir + data['screenName']));
+                    screenData.slideLoop = data['value'];
+                    fs.writeFileSync(screensDir + data['screenName'], JSON.stringify(screenData, null, 2));
+                    screenData.slides = [];
+                    ws.emit("message", "Slide Loop aggiornato");
+                    ws.broadcast.emit("updateScreenSetting", JSON.stringify({screenName: data['screenName'], screenData: screenData}));
+                    break;
+
+                case 'updateCurrentSlide':
+                    if (!fs.existsSync(screensDir + data['screenName'])) {
+                        ws.emit("error", "Schermo inesistente");
+                        break;
+                    }
+                    var screenData = JSON.parse(fs.readFileSync(screensDir + data['screenName']));
+                    let newCurrSlide;
+                    switch (data['command']){
+                        case 'foward':
+                            newCurrSlide = screenData.currentSlide + 1;
+                            if (newCurrSlide >= screenData.slides.length){
+                                if (screenData.slideLoop){
+                                    newCurrSlide = 0;
+                                }else{
+                                    newCurrSlide -= 1;
+                                }
+                            } 
+                            break;
+                        case 'backward':
+                            newCurrSlide = screenData.currentSlide - 1;
+                            if (newCurrSlide < 0){
+                                if (screenData.slideLoop){
+                                    newCurrSlide = screenData.slides.length - 1;
+                                }else{
+                                    newCurrSlide += 1;
+                                }
+                            } 
+                            break;
+                        case 'definite':
+                            const definiteRefer = screenData.slides.findIndex(slide => slide.id == data['slideId']);
+                            newCurrSlide = (definiteRefer >= 0)? definiteRefer : 0;
+                            break;
+                        default:
+                            newCurrSlide = 0;
+                            break;
+                    }
+                    screenData.currentSlide = newCurrSlide;
+                    fs.writeFileSync(screensDir + data['screenName'], JSON.stringify(screenData, null, 2));
+                    ws.emit("message", "Scorrimento slide " + data['screenName']);
+                    serverSocketIO.sockets.emit("updateCurrentSlide", JSON.stringify({screenName: data['screenName'], slide: newCurrSlide}));
+                    break;
+                
                 default:
                     sendMessage(ws, 'error', 'Unknown action');
             }
@@ -193,12 +269,3 @@ serverSocketIO.on('connection', (ws) => {
 
 
 serverHTTP.listen(8080);
-
-// TODO: protocollo gestione notifica di aggiornamento
-/* Creare dei file json in cui ci sono informazioni sulle slide.
-Quindi con una richiesta devo comunicare:
-
-a quale schermo mi riferisco (ogni schermo ha un suo file)
-a quale slide dello schermo mi riferisco
-l'operazione che devo fare (cambia sfondo, carica media, rimuovi media, riposiziona media)
-*/

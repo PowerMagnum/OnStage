@@ -14,7 +14,7 @@
       "id": 2,
       "duration": 0,
       "background": {
-        "path": "uploads/1724468488339.JPG",
+        "path": "/assets/img/default.jpg",
         "type": "image"
       },
       "media": []
@@ -23,7 +23,7 @@
       "id": 3,
       "duration": 0,
       "background": {
-        "path": "uploads/1724468590445.JPG",
+        "path": "/assets/img/default.jpg",
         "type": "image"
       },
       "media": []
@@ -32,22 +32,12 @@
       "id": 4,
       "duration": 0,
       "background": {
-        "path": "uploads/1724484022377.JPG",
-        "type": "image"
-      },
-      "media": []
-    },
-    {
-      "id": 5,
-      "duration": 0,
-      "background": {
         "path": "/assets/img/default.jpg",
         "type": "image"
       },
       "media": []
     }
   ],
-  "slidesLoop": false,
   "currentSlide": 0,
   "slideLoop": false
 }
