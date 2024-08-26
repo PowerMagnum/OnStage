@@ -7,13 +7,13 @@ function localHandler(action, data=null){
         case "authFail":
             if((!authFail) && confirm("La tua autenticazione non è più valida.\nPer continuare devi rifare il login, vuoi tornare alla pagina iniziale?")){
                 window.location = '/';
-                authFail = true;
             }
+            authFail = true;
             break;
         case "updateSlides":
             data = JSON.parse(data);
             if(data['screenName'].replace("Schermo","") == thisScreen){
-                getScreenData();
+                getScreenData(data['info']);
                 console.log("Il server ha richiesto l'aggiornamento delle slide");
             }
             break;
@@ -54,18 +54,21 @@ let OldSelectedSlide = null;
 
 document.querySelector("#content>#header>h4").innerHTML = 'Schermo: ' + thisScreen;
 
-function getScreenData(){
+function getScreenData(info = null){
     fetch('/screens/Schermo'+thisScreen)
     .then(response=>response.json())
     .then(data=>{
         screenData = data;
         //console.log(screenData);
         currentSlide = screenData['currentSlide'];
-        if(currentSlide){
+        if(currentSlide != null){
             currentSlideId = screenData.slides[currentSlide].id;
         }
         loadSettings();
-        loadSlides()
+        if (info && info.type == 'addedSlide'){
+            selectedSlide = info.params.slideId;
+        } 
+        loadSlides();
     });
 }
 
@@ -100,7 +103,7 @@ function loadSlides(){
         deleteButton.onclick = (event) => {removeSlide(event, slide.id)};
         slideDiv.appendChild(deleteButton);
 
-        if ((selectedSlide === null && index === 0) || selectedSlide == slide.id) {
+        if ((selectedSlide === null && index === 0) || selectedSlide == slide.id){
             selectedSlide = slide.id;
             slideDiv.classList.add('selected');
             selectSlide(slide.id, slideDiv);

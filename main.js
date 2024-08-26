@@ -82,7 +82,17 @@ function createToken(length) {
       result += chars.charAt(Math.floor(Math.random() * chars.length));
     }
     return result;
-}  
+} 
+
+function removeFile(path){
+    try{
+        if (! path.includes('assets')){
+            fs.unlinkSync(path);
+        }
+    }catch(err){
+        console.log("Eliminazione file fallita: '"+err+"'");
+    }
+}
 
 const { screenDefaultData, slideDefaultData, mediaDefaultData } = require('./defaultDataTemplate.js');
 /******************************
@@ -129,6 +139,10 @@ serverSocketIO.on('connection', (ws) => {
                         ws.emit("error", "Schermo inesistente");
                         break;
                     }
+                    const screenDataToDelete = JSON.parse(fs.readFileSync(screensDir + data['screenName'], 'utf-8'));
+                    screenDataToDelete.slides.forEach(slide => {
+                        removeFile('./www/' + slide.background.path);
+                    });
                     fs.unlinkSync(screensDir + data['screenName']);
                     ws.emit("message", "Schermo eliminato");
                     serverSocketIO.sockets.emit("updateScreens", "{}");
@@ -148,9 +162,12 @@ serverSocketIO.on('connection', (ws) => {
                         newSlide['id'] = screenData.slides.slice(-1).pop().id + 1;
                     }
                     screenData.slides.push(newSlide);
+                    if (screenData.currentSlide == null){
+                        screenData.currentSlide = 0;
+                    }
                     fs.writeFileSync(screensDir + data['screenName'], JSON.stringify(screenData, null, 2));
                     ws.emit("message", "Slide aggiunta");
-                    serverSocketIO.sockets.emit("updateSlides", JSON.stringify({screenName: data['screenName']}));
+                    serverSocketIO.sockets.emit("updateSlides", JSON.stringify({screenName: data['screenName'], info: {type: 'addedSlide', params: {slideId: newSlide.id}}}));
                     break;
 
                 //socket.emit("message", "removeSlide", JSON.stringify({screenName:'Schermo4', slideIdToRemove:2}))
@@ -160,10 +177,13 @@ serverSocketIO.on('connection', (ws) => {
                         break;
                     }
                     var screenData = JSON.parse(fs.readFileSync(screensDir + data['screenName']));
-                    if (screenData.slides.findIndex(slide => slide.id == data['slideIdToRemove']) < screenData.currentSlide){
+                    const slideIndexToRemove = screenData.slides.findIndex(slide => slide.id == data['slideIdToRemove']);
+                    if (slideIndexToRemove < screenData.currentSlide){
                         screenData.currentSlide -= 1;
                     }
-                    screenData.slides = screenData.slides.filter(slide => slide.id !== data['slideIdToRemove']);
+                    //screenData.slides = screenData.slides.filter(slide => slide.id !== data['slideIdToRemove']);
+                    removeFile('./www/'+screenData.slides[slideIndexToRemove].background.path);
+                    screenData.slides.splice(slideIndexToRemove, 1);
                     fs.writeFileSync(screensDir + data['screenName'], JSON.stringify(screenData, null, 2));
                     ws.emit("message", "Slide rimossa");
                     serverSocketIO.sockets.emit("updateSlides", JSON.stringify({screenName: data['screenName']}));
@@ -176,7 +196,9 @@ serverSocketIO.on('connection', (ws) => {
                         break;
                     }
                     var screenData = JSON.parse(fs.readFileSync(screensDir + data['screenName']));
-                    screenData.slides.find(slide => slide.id === data['slideId']).background.path = data['path'];
+                    const slideToUpdate = screenData.slides.find(slide => slide.id === data['slideId']);
+                    removeFile('./www/'+slideToUpdate.background.path);
+                    slideToUpdate.background.path = data['path'];
                     fs.writeFileSync(screensDir + data['screenName'], JSON.stringify(screenData, null, 2));
                     ws.emit("message", "Background aggiornato");
                     serverSocketIO.sockets.emit("updateSlides", JSON.stringify({screenName: data['screenName']}));
@@ -267,8 +289,8 @@ serverSocketIO.on('connection', (ws) => {
                 default:
                     sendMessage(ws, 'error', 'Unknown action');
             }
-        }catch{
-            console.log("Errore gestione messaggio in entrata");
+        }catch(err){
+            console.log("Errore gestione messaggio in entrata: '"+err+"'");
         }
     });
     ws.on('logoff', (code) => {
