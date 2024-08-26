@@ -10,6 +10,10 @@ fileSelector.onchange = () => {
 }
 
 function uploadFile(callerButton) {
+    if(selectedSlide == null){
+        alert("Nessuna slide selezionata!");
+        return;
+    }
     if(fileSelector.files.length <= 0){
         fileSelectorButton.style.animation = 'blink 0.75s linear 2';
         setTimeout(() => fileSelectorButton.style.animation = '', 1500);

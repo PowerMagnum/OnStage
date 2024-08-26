@@ -33,6 +33,7 @@ function localHandler(action, data=null){
             data = JSON.parse(data);
             if(data['screenName'].replace("Schermo","") == thisScreen){
                 currentSlide = data['slide'];
+                currentSlideId = screenData.slides[currentSlide].id;
                 loadSlides();
                 console.log("Scorrimento slide");
             }
@@ -47,7 +48,11 @@ function localHandler(action, data=null){
 const thisScreen = new URLSearchParams(window.location.search).get('s');
 let screenData;
 let currentSlide = null;
+let currentSlideId = null;
 let selectedSlide = null;
+let OldSelectedSlide = null;
+
+document.querySelector("#content>#header>h4").innerHTML = 'Schermo: ' + thisScreen;
 
 function getScreenData(){
     fetch('/screens/Schermo'+thisScreen)
@@ -56,6 +61,9 @@ function getScreenData(){
         screenData = data;
         //console.log(screenData);
         currentSlide = screenData['currentSlide'];
+        if(currentSlide){
+            currentSlideId = screenData.slides[currentSlide].id;
+        }
         loadSettings();
         loadSlides()
     });
@@ -81,32 +89,69 @@ function loadSlides(){
         const slideDiv = document.createElement('div');
         slideDiv.className = 'carouselSlide';
         slideDiv.style.backgroundImage = "url(" + slide.background.path + ")";
-        slideDiv.onclick = () => {selectSlide(slide.id, slideDiv)};
+        slideDiv.id = 'slide_' + slide.id;
+        slideDiv.onclick = () => {selectSlide(slide.id)};
         slideDiv.ondblclick = () => {slideSet(slide.id)};
         carousel.appendChild(slideDiv);
+
+        const deleteButton = document.createElement('button');
+        deleteButton.className = 'deleteButton';
+        deleteButton.onclick = (event) => {removeSlide(event, slide.id)};
+        slideDiv.appendChild(deleteButton);
+
         if ((selectedSlide === null && index === 0) || selectedSlide == slide.id) {
             selectedSlide = slide.id;
             slideDiv.classList.add('selected');
             selectSlide(slide.id, slideDiv);
         }
-        if (index == currentSlide){
+        if (slide.id == currentSlideId){
             slideDiv.classList.add('active');
         }
     });
 }
 
-function selectSlide(slideId, self){
+function selectSlide(slideId){
     const slideEditor = document.getElementById('slideEditor');
     const sSlide = screenData.slides.find(slide => slide.id === slideId);
+    const phisSlide = document.getElementById('slide_'+slideId);
     selectedSlide = slideId;
-    document.getElementsByClassName('selected')[0].classList.remove('selected');
-    self.classList.add('selected');
+    const oldSelected = document.getElementsByClassName('selected')[0];
+    if(!!oldSelected){
+        oldSelected.classList.remove('selected')
+    }
+    phisSlide.classList.add('selected');
     slideEditor.style.background = "url(" + sSlide.background.path + ")"; 
+    console.log("Selezionata slide: " + slideId);
 }
 
 function createSlide(){
     socket.emit("message", getCookie("code"), "addSlide", JSON.stringify({screenName:'Schermo' + thisScreen}));
     console.log("Invio richiesta creazione slide");
+}
+
+function removeSlide(event, slideId){
+    event.stopPropagation();
+    if(currentSlideId == slideId){
+        alert("Non è possibile eliminare la slide attiva\nPassa ad un'altra slide e riprova");
+        return;
+    }
+    const targetIndex = screenData.slides.findIndex(slide => slide.id == slideId);
+    console.log(slideId);
+    console.log(targetIndex);
+    if(confirm("Sei sicuro di voler rimuovere la slide?\nQuesta azione sarà irreversibile")){
+        let prevId;
+        if(screenData.slides.length > 1){
+            prevId = screenData.slides[(targetIndex - 1 < 0)? targetIndex + 1 : targetIndex - 1].id;
+        }else{
+            selectedSlide = null;
+        }
+        console.log(prevId);
+        socket.emit("message", getCookie("code"), "removeSlide", JSON.stringify({screenName:'Schermo' + thisScreen, slideIdToRemove:slideId}));
+        console.log("Invio richiesta creazione slide");
+        if (selectedSlide == slideId){
+            selectSlide(prevId);
+        }
+    }
 }
 
 function slideFoward(){

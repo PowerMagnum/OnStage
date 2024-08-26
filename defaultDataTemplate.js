@@ -2,7 +2,7 @@ const screenDefaultData = {
     screenRatio: "16/9", 
     slides: [], 
     slidesLoop: false,
-    currentSlide: 0
+    currentSlide: null
 };
 const slideDefaultData = {
         id: 0,

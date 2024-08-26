@@ -26,14 +26,19 @@ function getScreens(){
     
             const editButton = document.createElement('button');
             editButton.className = 'editButton loggedAction forceHidden';
-            editButton.onclick = () => {window.location="/editor.html?s=" + screenCode};
+            editButton.onclick = (event) => {
+                event.stopPropagation();
+                window.location="/editor.html?s=" + screenCode};
             screenIcon.appendChild(editButton);
 
             const deleteButton = document.createElement('button');
             deleteButton.className = 'deleteButton loggedAction forceHidden';
-            deleteButton.onclick = () => {deleteScreen(screenCode)};
+            deleteButton.onclick = (event) => {
+                event.stopPropagation();
+                deleteScreen(screenCode)};
             screenIcon.appendChild(deleteButton);
-
+            
+            screenIcon.onclick = () => {showViewer(screenName)}
             screenIcon.appendChild(pElement);
             content.appendChild(screenIcon);
             });
@@ -137,13 +142,28 @@ if (getCookie("code") == null){
     localHandler("initPage");
 }
 
-function localHandler(action){
+function localHandler(action, data=null){
     switch (action) {
         case "initPage":
             getScreens();
             break;
         case "updateScreens":
             getScreens();
+            break;
+        case "updateSlides":
+            data = JSON.parse(data);
+            if(data['screenName'] == thisScreen){
+                getScreenData();
+                console.log("Il server ha richiesto l'aggiornamento delle slide");
+            }
+            break;
+        case "updateCurrentSlide":
+            data = JSON.parse(data);
+            if(data['screenName'] == thisScreen){
+                currentSlide = data['slide'];
+                setViewingSlide(currentSlide);
+                console.log("Scorrimento slide");
+            }
             break;
         default:
             console.log("Ricevuta operazione non gestita localmente: " + action);

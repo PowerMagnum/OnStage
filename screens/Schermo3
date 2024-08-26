@@ -2,24 +2,52 @@
   "screenRatio": "16/9",
   "slides": [
     {
-      "id": 0,
+      "id": 9,
+      "duration": 0,
+      "background": {
+        "path": "uploads/1724650111087.png",
+        "type": "image"
+      },
+      "media": []
+    },
+    {
+      "id": 10,
+      "duration": 0,
+      "background": {
+        "path": "uploads/1724570717221.JPG",
+        "type": "image"
+      },
+      "media": []
+    },
+    {
+      "id": 11,
+      "duration": 0,
+      "background": {
+        "path": "uploads/1724570729406.JPG",
+        "type": "image"
+      },
+      "media": []
+    },
+    {
+      "id": 12,
+      "duration": 0,
+      "background": {
+        "path": "uploads/1724584549516.png",
+        "type": "image"
+      },
+      "media": []
+    },
+    {
+      "id": 13,
       "duration": 0,
       "background": {
         "path": "/assets/img/default.jpg",
         "type": "image"
       },
       "media": []
-    },
-    {
-      "id": 1,
-      "duration": 0,
-      "background": {
-        "path": "uploads/1724495460465.m4v",
-        "type": "image"
-      },
-      "media": []
     }
   ],
   "slidesLoop": false,
-  "currentSlide": 1
+  "currentSlide": 3,
+  "slideLoop": true
 }

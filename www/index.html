@@ -6,6 +6,7 @@
     <title>OnStage</title>
     <link rel="stylesheet" href="assets/css/index.css">
     <link rel="stylesheet" href="assets/css/main_page.css">
+    <link rel="stylesheet" href="assets/css/viewer.css">
 </head>
 <body>
     <div id="pageLayout">
@@ -24,11 +25,15 @@
         <button>Login</button>
     </div>
 
+    <div id="viewerContainer" class="forceHidden">
+
+    </div>
     <script src="https://cdn.socket.io/4.6.0/socket.io.min.js"
             integrity="sha384-c79GN5VsunZvi+Q/WObgk2in0CbZsHnjEqvFxC5DxHn9lTfNce2WW6h2pH6u/kF+"
             crossorigin="anonymous">
     </script>
-    <script src="assets/js/index.js"></script>
+    <script src="assets/js/index.js" defer></script>
     <script src="assets/js/main_page.js" defer></script>
+    <script src="assets/js/viewer.js" defer></script>
 </body>
 </html>

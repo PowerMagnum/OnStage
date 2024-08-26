@@ -5,7 +5,7 @@
       "id": 1,
       "duration": 0,
       "background": {
-        "path": "/assets/img/default.jpg",
+        "path": "uploads/1724635004852.png",
         "type": "image"
       },
       "media": []
@@ -14,7 +14,7 @@
       "id": 2,
       "duration": 0,
       "background": {
-        "path": "/assets/img/default.jpg",
+        "path": "uploads/1724650307324.png",
         "type": "image"
       },
       "media": []
@@ -38,6 +38,6 @@
       "media": []
     }
   ],
-  "currentSlide": 0,
+  "currentSlide": 1,
   "slideLoop": false
 }

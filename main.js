@@ -160,6 +160,9 @@ serverSocketIO.on('connection', (ws) => {
                         break;
                     }
                     var screenData = JSON.parse(fs.readFileSync(screensDir + data['screenName']));
+                    if (screenData.slides.findIndex(slide => slide.id == data['slideIdToRemove']) < screenData.currentSlide){
+                        screenData.currentSlide -= 1;
+                    }
                     screenData.slides = screenData.slides.filter(slide => slide.id !== data['slideIdToRemove']);
                     fs.writeFileSync(screensDir + data['screenName'], JSON.stringify(screenData, null, 2));
                     ws.emit("message", "Slide rimossa");
