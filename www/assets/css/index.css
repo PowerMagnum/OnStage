@@ -28,6 +28,7 @@ body{
     --trasparentBack: #00112299;
     --AR_width: 16;
     --AR_height: 9;
+    --overflowState: cover;
 }
 
 button:hover{

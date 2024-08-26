@@ -74,6 +74,7 @@ function loadSettings(){
     const slideLoopSelector = document.getElementById("slideLoop");
     slideLoopSelector.checked = screenData['slideLoop'];
     changeAspectRatio(screenData['screenRatio']);
+    changeOverflowBehaviour(screenData['overflowBVR']);
 }
 
 function loadSlides(){
@@ -120,7 +121,7 @@ function selectSlide(slideId){
         oldSelected.classList.remove('selected')
     }
     phisSlide.classList.add('selected');
-    slideEditor.style.background = "url(" + sSlide.background.path + ")"; 
+    slideEditor.style.backgroundImage = "url(" + sSlide.background.path + ")"; 
     console.log("Selezionata slide: " + slideId);
 }
 

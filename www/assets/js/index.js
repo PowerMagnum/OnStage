@@ -20,6 +20,7 @@ function getCookie(name) {
 }
 
 let socket = io();
+const root = document.querySelector(':root');
 
 socket.on("connect", () => {
     console.log("Connesso al server");

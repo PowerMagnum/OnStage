@@ -34,12 +34,34 @@ function changeAspectRatio(ratio = null){
     value = aspectRatioChanger.value.split("/");
     let v_width = value[0];
     let v_heigh = value[1];
-    const root = document.querySelector(':root')
     root.style.setProperty('--AR_width', v_width);
     root.style.setProperty('--AR_height', v_heigh);
     resizeEditor();
     //console.log("suca");
 }
+
+function changeOverflowBehaviour(value = null){
+    if (value != null){
+        overflowBVRchanger.value = value;
+    }else{
+        socket.emit("message", getCookie("code"), "updateScreenOB", JSON.stringify({screenName:'Schermo' + thisScreen, mode: overflowBVRchanger.value}));
+        console.log("Invio richiesta aggiornamento comportamento di overflow");
+    }
+    switch (overflowBVRchanger.value){
+        case 'ritaglia':
+            root.style.setProperty('--overflowState', 'cover');
+            break;
+        case 'riduci':
+            root.style.setProperty('--overflowState', 'contain');
+            break;
+        case 'adatta':
+            root.style.setProperty('--overflowState', '100% 100%');
+            break;
+        default:
+            break;
+    }
+}
+
 
 function setLoopState(){
     socket.emit("message", getCookie("code"), "updateLoopState", JSON.stringify({screenName:'Schermo' + thisScreen, value: slideLoopSelector.checked}));
@@ -47,10 +69,12 @@ function setLoopState(){
 }
 
 const aspectRatioChanger = document.getElementById('aspectRatioChanger');
+const overflowBVRchanger = document.getElementById('overflowBVRchanger');
 const slideLoopSelector = document.getElementById('slideLoop');
 window.addEventListener('load', resizeEditor);
 window.addEventListener('resize', resizeEditor);
 aspectRatioChanger.addEventListener('change', () => {changeAspectRatio()});
+overflowBVRchanger.addEventListener('change', () => {changeOverflowBehaviour()});
 slideLoopSelector.addEventListener('change', setLoopState);
 const returnButton = document.getElementById("returnButton");
 returnButton.onclick = () => {window.location = "/"};

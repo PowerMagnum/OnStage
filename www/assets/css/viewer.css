@@ -3,7 +3,7 @@
     background-color:black;
     background-position: center;
     background-repeat: no-repeat;
-    background-size: cover;
+    background-size: var(--overflowState);;
     background-attachment: fixed;
     width: 100%;
     height: 100%;

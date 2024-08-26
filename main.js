@@ -196,6 +196,19 @@ serverSocketIO.on('connection', (ws) => {
                     ws.broadcast.emit("updateScreenSetting", JSON.stringify({screenName: data['screenName'], screenData: screenData}));
                     break;
 
+                case 'updateScreenOB':
+                    if (!fs.existsSync(screensDir + data['screenName'])) {
+                        ws.emit("error", "Schermo inesistente");
+                        break;
+                    }
+                    var screenData = JSON.parse(fs.readFileSync(screensDir + data['screenName']));
+                    screenData.overflowBVR = data['mode'];
+                    fs.writeFileSync(screensDir + data['screenName'], JSON.stringify(screenData, null, 2));
+                    screenData.slides = [];
+                    ws.emit("message", "Overflow behaviour aggiornato");
+                    ws.broadcast.emit("updateScreenSetting", JSON.stringify({screenName: data['screenName'], mode: data['mode']}));
+                    break;
+
                 case 'updateLoopState':
                     if (!fs.existsSync(screensDir + data['screenName'])) {
                         ws.emit("error", "Schermo inesistente");

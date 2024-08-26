@@ -19,6 +19,7 @@ function getScreenData(){
     .then(data=>{
         screenData = data;
         currentSlide = screenData['currentSlide'];
+        changeOverflowBehaviour(screenData['overflowBVR']);
         if(screenData.slides.length > 0){
             setViewingSlide(currentSlide);
         }else{
@@ -30,13 +31,30 @@ function getScreenData(){
 }
 
 function setViewingSlide(index){
-    console.log("#"+index);
+    //console.log("#"+index);
     if (index >= 0){
         viewerContainer.style.backgroundImage = "url(" + screenData.slides[index].background.path + ")";
     }else{
         viewerContainer.style.backgroundImage = "url(/assets/img/default.jpg)";
     }
     
+}
+
+function changeOverflowBehaviour(value){
+    console.log("# "+ value);
+    switch (value){
+        case 'ritaglia':
+            root.style.setProperty('--overflowState', 'cover');
+            break;
+        case 'riduci':
+            root.style.setProperty('--overflowState', 'contain');
+            break;
+        case 'adatta':
+            root.style.setProperty('--overflowState', '100% 100%');
+            break;
+        default:
+            break;
+    }
 }
 
 function showViewer(screen){

@@ -1,5 +1,6 @@
 const screenDefaultData = { 
-    screenRatio: "16/9", 
+    screenRatio: "16/9",
+    overflowBVR: "cover",
     slides: [], 
     slidesLoop: false,
     currentSlide: null

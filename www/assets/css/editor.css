@@ -48,8 +48,9 @@
 
 .carouselSlide{
   aspect-ratio: var(--AR_width) / var(--AR_height);
+  background-color: #000;
   background-image: url("../img/default.jpg");
-  background-size: cover;
+  background-size: var(--overflowState);
   background-repeat: no-repeat;
   background-position: center;
   background-attachment:local;
@@ -71,6 +72,7 @@
 
 #addSlide.carouselSlide{
   background-image: url("../img/screen.png");
+  background-color: transparent;
   background-size: 100% 100% !important;
   background-repeat: no-repeat !important;
   background-position: center !important;
@@ -150,9 +152,9 @@
     aspect-ratio: var(--AR_width) / var(--AR_height);
     border: 1px solid var(--color1);
     margin: 0 auto;
-    background: var(--color2);
+    background-color: #000;
     background-image: url("../img/default.jpg");
-    background-size: cover !important;
+    background-size: var(--overflowState) !important;
     background-repeat: no-repeat !important;
     background-position: center !important;
     background-attachment:local !important;

@@ -32,7 +32,7 @@
       "id": 12,
       "duration": 0,
       "background": {
-        "path": "uploads/1724584549516.png",
+        "path": "uploads/1724663313274.png",
         "type": "image"
       },
       "media": []
@@ -41,13 +41,14 @@
       "id": 13,
       "duration": 0,
       "background": {
-        "path": "/assets/img/default.jpg",
+        "path": "uploads/1724663356549.jpg",
         "type": "image"
       },
       "media": []
     }
   ],
   "slidesLoop": false,
-  "currentSlide": 3,
-  "slideLoop": true
+  "currentSlide": 4,
+  "slideLoop": true,
+  "overflowBVR": "riduci"
 }

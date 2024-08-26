@@ -157,6 +157,13 @@ function localHandler(action, data=null){
                 console.log("Il server ha richiesto l'aggiornamento delle slide");
             }
             break;
+        case "updateScreenSetting":
+            data = JSON.parse(data);
+            if(data['screenName'] == thisScreen){
+                changeOverflowBehaviour(data['mode']);
+                console.log("Il server ha richiesto l'aggiornamento delle impostazioni schermo");
+            }
+            break;
         case "updateCurrentSlide":
             data = JSON.parse(data);
             if(data['screenName'] == thisScreen){
