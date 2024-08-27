@@ -224,18 +224,58 @@
   }  
 }
 
-#controlPanel>.screenControls>*{
+#controlPanel>.screenControls *{
   text-align: center;
   font-family: main;
   font-size: 1.5vmax;
 }
-#controlPanel>.screenControls>.userInteract{
+#controlPanel>.screenControls .userInteract{
   color: var(--color1);
   background: var(--color3);
   border: 1px solid var(--color2);
 }
-#controlPanel>.screenControls>.userInteract::placeholder{
+#controlPanel>.screenControls .userInteract::placeholder{
   color: var(--color2);
+}
+
+#controlPanel>.screenControls>.durationSetter{
+  display: flex;
+  gap: 0.25vw;
+  width: 100%;
+  max-width: 100%;
+}
+
+#controlPanel>.screenControls>.durationSetter>#timeInput{
+  flex: 1 1 auto;
+  width: 0;
+  min-width: 0;
+  max-width: 100%;
+}
+
+#controlPanel>.screenControls>.durationSetter>#saveTime{
+  flex: 0 0 auto;
+  width: auto; 
+  aspect-ratio: 1/1;
+  background-color: var(--color3);
+  border: 0;
+  border-radius: 0;
+  background-image: url('../img/save.png');  
+  background-position: center;
+  background-size: 90%;
+  background-repeat: no-repeat;
+  height: auto;
+  max-height: 100%;
+}
+
+#controlPanel>.screenControls>#toggleTime{
+  background-color: var(--color2);
+  border: 2px solid var(--color4);
+  font-family: main;
+  color: var(--color4);
+  font-size: 1.5vmax;
+  word-wrap: break-word;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 
 @media (max-aspect-ratio: 4/3){

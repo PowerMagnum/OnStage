@@ -3,11 +3,11 @@ const screenDefaultData = {
     overflowBVR: "ritaglia",
     slides: [], 
     slidesLoop: false,
-    currentSlide: null
+    currentSlide: null,
+    duration: 5
 };
 const slideDefaultData = {
         id: 0,
-        duration: 0,
         background: {
             path: "/assets/img/default.jpg",
             type: "image"

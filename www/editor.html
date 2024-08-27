@@ -26,7 +26,13 @@
                 <button id="Carica_Miniatura">Carica miniatura</button>
             </div>
             <div class="screenControls">
-                <input type="number" placeholder="durata slide" class="userInteract">
+                <div class="durationSetter">
+                    <input type="number" id="timeInput" placeholder="durata slide" class="userInteract">
+                    <button id="saveTime"></button>
+                </div>
+
+                <button id="toggleTime">Avvia Timer</button>
+
                 <select name="ratio" class="userInteract" id="aspectRatioChanger">
                     <option value="16/9">16:9</option>
                     <option value="4/3">4:3</option>
@@ -45,8 +51,8 @@
                 </div>
             </div>
             <div class="controlArea">
-                <button class="cliccabile" id="fowardControl"></button>
                 <button class="cliccabile" id="backwardControl"></button>
+                <button class="cliccabile" id="fowardControl"></button>
             </div>
         </div>
     </div>

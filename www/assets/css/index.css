@@ -31,10 +31,10 @@ body{
     --overflowState: cover;
 }
 
-button:hover{
+button:hover:not(.disabled){
     filter: drop-shadow(0 0 10px var(--color2));
 }
-button:active{
+button:active:not(.disabled){
     filter: brightness(150%)
 }
 .forceHidden{

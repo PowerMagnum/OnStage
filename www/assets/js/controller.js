@@ -39,6 +39,15 @@ function localHandler(action, data=null){
             }
             break;
 
+        case "setTimerState":
+            data = JSON.parse(data);
+            console.log(data);
+            if(data['screenName'].replace("Schermo","") == thisScreen){
+                toggleTime(data['value']);
+                console.log("Impostazione stato timer");
+            }
+            break;
+
         default:
             console.log("Ricevuta operazione non gestita localmente: " + action);
             break;
@@ -55,6 +64,11 @@ let OldSelectedSlide = null;
 document.querySelector("#content>#header>h4").innerHTML = 'Schermo: ' + thisScreen;
 
 function getScreenData(info = null){
+    if (info && info.type == 'changeSlideTime'){
+        screenData.slides[info.params.slide].duration = info.params.duration;
+        setTimeInput(info.params.duration, info.params.slideId);
+        return;
+    }
     fetch('/screens/Schermo'+thisScreen)
     .then(response=>response.json())
     .then(data=>{
@@ -78,6 +92,8 @@ function loadSettings(){
     slideLoopSelector.checked = screenData['slideLoop'];
     changeAspectRatio(screenData['screenRatio']);
     changeOverflowBehaviour(screenData['overflowBVR']);
+    setTimeInput(screenData['duration']);
+    getTimerState();
 }
 
 function loadSlides(){
@@ -170,5 +186,16 @@ function slideSet(slide){
     socket.emit("message", getCookie("code"), "updateCurrentSlide", JSON.stringify({screenName:'Schermo' + thisScreen, command: 'definite', slideId: slide}));
 }
 
-document.getElementById('fowardControl').onclick = slideFoward;
 document.getElementById('backwardControl').onclick = slideBackward;
+document.getElementById('fowardControl').onclick = slideFoward;
+
+
+
+
+
+/* TODO:
+    lo switch per attivare il cronometro di schermo
+    fixxare la pulsantiera sui telefoni
+    invertire i controlli a freccia
+*/
+

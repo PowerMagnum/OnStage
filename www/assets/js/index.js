@@ -75,6 +75,11 @@ socket.on("connect", () => {
         localHandler("updateCurrentSlide", data);
     });
 
+    socket.on("setTimerState", (data) => {
+        console.log("Il server comunica un cambio di timer state");
+        localHandler("setTimerState", data);
+    });
+
     socket.on('reconnect_attempt', (attemptNumber) => {
         console.log(`Tentativo di riconnessione ${attemptNumber} in corso`);
     });

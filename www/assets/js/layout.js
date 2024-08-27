@@ -68,9 +68,74 @@ function setLoopState(){
     console.log("Invio richiesta aggiornamento aspect ratio");
 }
 
+function validateTime(value){
+        let seconds = parseInt(value, 10);
+        if (isNaN(seconds)) {
+            return 5;
+        }else if (seconds < 2) {
+            return 2;
+        }else if (seconds > 300) {
+            return 300;
+        }
+        return seconds;
+    }
+
+function setTimeInput(time){
+    timeInput.value = validateTime(time);
+}
+
+function sendTimeValue(time){
+    if (!timerEnabled){
+        return;
+    }
+    time = validateTime(time);
+    socket.emit("message", getCookie("code"), "updateScreenTime", JSON.stringify({screenName:'Schermo' + thisScreen, duration:time}));
+    console.log("Invio richiesta aggiornamento timer schermo");
+}
+
+let timerEnabled = false;
+function toggleTime(force = null){
+    if (timerEnabled){
+        toggleTimeBtn.innerHTML = 'Ferma Timer';
+        timeInput.disabled = true;
+        saveTimeBtn.classList.add('disabled');
+    }else{
+        toggleTimeBtn.innerHTML = 'Avvia Timer';
+        timeInput.disabled = false;
+        saveTimeBtn.classList.remove('disabled');
+    }
+
+    if (force == null){
+        socket.emit("message", getCookie("code"), "setTimer", JSON.stringify({screenName:'Schermo'+ thisScreen, value: timerEnabled}));
+        //console.log('invio ' + timerEnabled);
+    }
+    timerEnabled = !timerEnabled;
+}
+
+function getTimerState(){
+    fetch('/timer/Schermo'+thisScreen)
+    .then(response=>response.text())
+    .then(data=>{
+        if (data == 'ON'){
+            timerEnabled = true;
+            toggleTime(true);
+        }else{
+            timerEnabled = false;
+            toggleTime(false);
+        }
+    });
+}
+
 const aspectRatioChanger = document.getElementById('aspectRatioChanger');
 const overflowBVRchanger = document.getElementById('overflowBVRchanger');
 const slideLoopSelector = document.getElementById('slideLoop');
+
+const timeInput = document.getElementById('timeInput');
+const saveTimeBtn = document.getElementById('saveTime');
+const toggleTimeBtn = document.getElementById('toggleTime');
+toggleTimeBtn.onclick = () => {toggleTime()};
+saveTimeBtn.onclick = () => {sendTimeValue(timeInput.value)};
+
 window.addEventListener('load', resizeEditor);
 window.addEventListener('resize', resizeEditor);
 aspectRatioChanger.addEventListener('change', () => {changeAspectRatio()});

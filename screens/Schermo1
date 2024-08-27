@@ -1,10 +1,10 @@
 {
   "screenRatio": "16/9",
-  "overflowBVR": "ritaglia",
+  "overflowBVR": "riduci",
+  "duration": 5,
   "slides": [
     {
       "id": 0,
-      "duration": 0,
       "background": {
         "path": "uploads/1724668993865.JPG",
         "type": "image"
@@ -13,7 +13,6 @@
     },
     {
       "id": 1,
-      "duration": 0,
       "background": {
         "path": "uploads/1724668998016.JPG",
         "type": "image"
@@ -22,7 +21,6 @@
     },
     {
       "id": 2,
-      "duration": 0,
       "background": {
         "path": "uploads/1724669002855.JPG",
         "type": "image"
@@ -31,7 +29,6 @@
     },
     {
       "id": 3,
-      "duration": 0,
       "background": {
         "path": "uploads/1724669007748.JPG",
         "type": "image"
@@ -40,7 +37,6 @@
     },
     {
       "id": 4,
-      "duration": 0,
       "background": {
         "path": "uploads/1724670166288.JPG",
         "type": "image"
@@ -49,14 +45,14 @@
     },
     {
       "id": 5,
-      "duration": 0,
       "background": {
-        "path": "/assets/img/default.jpg",
+        "path": "uploads/1724681620807.gif",
         "type": "image"
       },
       "media": []
     }
   ],
   "slidesLoop": false,
-  "currentSlide": 1
+  "currentSlide": 0,
+  "slideLoop": true
 }

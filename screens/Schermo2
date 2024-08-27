@@ -1,10 +1,10 @@
 {
   "screenRatio": "9/16",
   "overflowBVR": "riduci",
+  "duration": 3,
   "slides": [
     {
       "id": 0,
-      "duration": 0,
       "background": {
         "path": "uploads/1724670419106.png",
         "type": "image"
@@ -13,14 +13,22 @@
     },
     {
       "id": 1,
-      "duration": 0,
       "background": {
         "path": "uploads/1724670396028.png",
+        "type": "image"
+      },
+      "media": []
+    },
+    {
+      "id": 2,
+      "background": {
+        "path": "uploads/1724759226178.png",
         "type": "image"
       },
       "media": []
     }
   ],
   "slidesLoop": false,
-  "currentSlide": 0
+  "currentSlide": 0,
+  "slideLoop": true
 }
