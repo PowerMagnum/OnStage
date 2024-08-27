@@ -1,3 +1,4 @@
+const path = require('path');
 const screenDefaultData = { 
     screenRatio: "16/9",
     overflowBVR: "ritaglia",
@@ -9,13 +10,13 @@ const screenDefaultData = {
 const slideDefaultData = {
         id: 0,
         background: {
-            path: "/assets/img/default.jpg",
+            path: path.join("assets", "img", "default.jpg"),
             type: "image"
         },
         media: []
     }
 const mediaDefaultData = {
-    path: "/assets/img/default.jpg",
+    path: path.join("assets", "img", "default.jpg"),
     type: "image",
     position: {
         x: 50,

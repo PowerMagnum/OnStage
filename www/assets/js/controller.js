@@ -190,12 +190,3 @@ document.getElementById('backwardControl').onclick = slideBackward;
 document.getElementById('fowardControl').onclick = slideFoward;
 
 
-
-
-
-/* TODO:
-    lo switch per attivare il cronometro di schermo
-    fixxare la pulsantiera sui telefoni
-    invertire i controlli a freccia
-*/
-
