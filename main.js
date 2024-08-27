@@ -79,7 +79,7 @@ serverExpress.get('/timer/:screenName', (req, res) => {
 
 serverExpress.get('/screens/:screenName', (req, res) => {
     const screenName = req.params.screenName;
-    const filePath = screensDir + screenName;
+    const filePath = path.join(screensDir, screenName);
 
     if (fs.existsSync(filePath)) {
         const fileContent = fs.readFileSync(filePath, 'utf8');
@@ -155,38 +155,38 @@ function serverMessageHandler(ws, action, data){
         //socket.emit("message", "createScreen", "{}")
         case 'createScreen':
             let screensCount = fs.readdirSync(screensDir).length
-            while(fs.existsSync(screensDir + 'Schermo' + (screensCount+1))){
+            while(fs.existsSync(path.join(screensDir , 'Schermo' + (screensCount+1)))){
                 screensCount += 1;
             }
             console.log(screensCount);
-            fs.writeFileSync(screensDir + 'Schermo' + (screensCount+1), JSON.stringify(screenDefaultData, null, 2));
+            fs.writeFileSync(path.join(screensDir , 'Schermo' + (screensCount+1)), JSON.stringify(screenDefaultData, null, 2));
             ws.emit("message", "Schermo creato");
             serverSocketIO.sockets.emit("updateScreens", "{}");
             break;
         
         //socket.emit("message", "deleteScreen", JSON.stringify({screenName:'Schermo4'}))
         case 'deleteScreen':
-            //console.log(screensDir + data['screenName']);
-            if (!fs.existsSync(screensDir + data['screenName'])) {
+            //console.log(path.join(screensDir, data['screenName']));
+            if (!fs.existsSync(path.join(screensDir, data['screenName']))) {
                 ws.emit("error", "Schermo inesistente");
                 break;
             }
-            const screenDataToDelete = JSON.parse(fs.readFileSync(screensDir + data['screenName'], 'utf-8'));
+            const screenDataToDelete = JSON.parse(fs.readFileSync(path.join(screensDir, data['screenName']), 'utf-8'));
             screenDataToDelete.slides.forEach(slide => {
-                removeFile('./www/' + slide.background.path);
+                removeFile(path.join('.', 'www', slide.background.path));
             });
-            fs.unlinkSync(screensDir + data['screenName']);
+            fs.unlinkSync(path.join(screensDir, data['screenName']));
             ws.emit("message", "Schermo eliminato");
             serverSocketIO.sockets.emit("updateScreens", "{}");
             break;
         
         //socket.emit("message", "addSlide", JSON.stringify({screenName:'Schermo4'}))
         case 'addSlide':
-            if (!fs.existsSync(screensDir + data['screenName'])) {
+            if (!fs.existsSync(path.join(screensDir, data['screenName']))) {
                 ws.emit("error", "Schermo inesistente");
                 break;
             }
-            var screenData = JSON.parse(fs.readFileSync(screensDir + data['screenName']));
+            var screenData = JSON.parse(fs.readFileSync(path.join(screensDir, data['screenName'])));
             var newSlide = slideDefaultData;
             if (screenData.slides.length <= 0){
                 newSlide['id'] = 0;
@@ -197,91 +197,91 @@ function serverMessageHandler(ws, action, data){
             if (screenData.currentSlide == null){
                 screenData.currentSlide = 0;
             }
-            fs.writeFileSync(screensDir + data['screenName'], JSON.stringify(screenData, null, 2));
+            fs.writeFileSync(path.join(screensDir, data['screenName']), JSON.stringify(screenData, null, 2));
             ws.emit("message", "Slide aggiunta");
             serverSocketIO.sockets.emit("updateSlides", JSON.stringify({screenName: data['screenName'], info: {type: 'addedSlide', params: {slideId: newSlide.id}}}));
             break;
 
         //socket.emit("message", "removeSlide", JSON.stringify({screenName:'Schermo4', slideIdToRemove:2}))
         case 'removeSlide':
-            if (!fs.existsSync(screensDir + data['screenName'])) {
+            if (!fs.existsSync(path.join(screensDir, data['screenName']))) {
                 ws.emit("error", "Schermo inesistente");
                 break;
             }
-            var screenData = JSON.parse(fs.readFileSync(screensDir + data['screenName']));
+            var screenData = JSON.parse(fs.readFileSync(path.join(screensDir, data['screenName'])));
             const slideIndexToRemove = screenData.slides.findIndex(slide => slide.id == data['slideIdToRemove']);
             if (slideIndexToRemove < screenData.currentSlide){
                 screenData.currentSlide -= 1;
             }
             //screenData.slides = screenData.slides.filter(slide => slide.id !== data['slideIdToRemove']);
-            removeFile('./www/'+screenData.slides[slideIndexToRemove].background.path);
+            removeFile(path.join('.','www',screenData.slides[slideIndexToRemove].background.path));
             screenData.slides.splice(slideIndexToRemove, 1);
-            fs.writeFileSync(screensDir + data['screenName'], JSON.stringify(screenData, null, 2));
+            fs.writeFileSync(path.join(screensDir, data['screenName']), JSON.stringify(screenData, null, 2));
             ws.emit("message", "Slide rimossa");
             serverSocketIO.sockets.emit("updateSlides", JSON.stringify({screenName: data['screenName']}));
             break;
         
         //socket.emit("message", getCookie("code"), "updateSlideBackground", JSON.stringify({screenName:'Schermo' + thisScreen, slideId: selectedSlide, path: path}));
         case 'updateSlideBackground':
-            if (!fs.existsSync(screensDir + data['screenName'])) {
+            if (!fs.existsSync(path.join(screensDir, data['screenName']))) {
                 ws.emit("error", "Schermo inesistente");
                 break;
             }
-            var screenData = JSON.parse(fs.readFileSync(screensDir + data['screenName']));
+            var screenData = JSON.parse(fs.readFileSync(path.join(screensDir, data['screenName'])));
             const slideToUpdate = screenData.slides.find(slide => slide.id === data['slideId']);
-            removeFile('./www/'+slideToUpdate.background.path);
+            removeFile(path.join('.', 'www', slideToUpdate.background.path));
             slideToUpdate.background.path = data['path'];
-            fs.writeFileSync(screensDir + data['screenName'], JSON.stringify(screenData, null, 2));
+            fs.writeFileSync(path.join(screensDir, data['screenName']), JSON.stringify(screenData, null, 2));
             ws.emit("message", "Background aggiornato");
             serverSocketIO.sockets.emit("updateSlides", JSON.stringify({screenName: data['screenName']}));
             break;
         
         
         case 'updateScreenRatio':
-            if (!fs.existsSync(screensDir + data['screenName'])) {
+            if (!fs.existsSync(path.join(screensDir, data['screenName']))) {
                 ws.emit("error", "Schermo inesistente");
                 break;
             }
-            var screenData = JSON.parse(fs.readFileSync(screensDir + data['screenName']));
+            var screenData = JSON.parse(fs.readFileSync(path.join(screensDir, data['screenName'])));
             screenData.screenRatio = data['newRatio'];
-            fs.writeFileSync(screensDir + data['screenName'], JSON.stringify(screenData, null, 2));
+            fs.writeFileSync(path.join(screensDir, data['screenName']), JSON.stringify(screenData, null, 2));
             screenData.slides = [];
             ws.emit("message", "Aspect ratio aggiornato");
             ws.broadcast.emit("updateScreenSetting", JSON.stringify({screenName: data['screenName'], screenData: screenData}));
             break;
 
         case 'updateScreenOB':
-            if (!fs.existsSync(screensDir + data['screenName'])) {
+            if (!fs.existsSync(path.join(screensDir, data['screenName']))) {
                 ws.emit("error", "Schermo inesistente");
                 break;
             }
-            var screenData = JSON.parse(fs.readFileSync(screensDir + data['screenName']));
+            var screenData = JSON.parse(fs.readFileSync(path.join(screensDir, data['screenName'])));
             screenData.overflowBVR = data['mode'];
-            fs.writeFileSync(screensDir + data['screenName'], JSON.stringify(screenData, null, 2));
+            fs.writeFileSync(path.join(screensDir, data['screenName']), JSON.stringify(screenData, null, 2));
             screenData.slides = [];
             ws.emit("message", "Overflow behaviour aggiornato");
             ws.broadcast.emit("updateScreenSetting", JSON.stringify({screenName: data['screenName'], mode: data['mode']}));
             break;
 
         case 'updateLoopState':
-            if (!fs.existsSync(screensDir + data['screenName'])) {
+            if (!fs.existsSync(path.join(screensDir, data['screenName']))) {
                 ws.emit("error", "Schermo inesistente");
                 break;
             }
-            var screenData = JSON.parse(fs.readFileSync(screensDir + data['screenName']));
+            var screenData = JSON.parse(fs.readFileSync(path.join(screensDir, data['screenName'])));
             screenData.slideLoop = data['value'];
-            fs.writeFileSync(screensDir + data['screenName'], JSON.stringify(screenData, null, 2));
+            fs.writeFileSync(path.join(screensDir, data['screenName']), JSON.stringify(screenData, null, 2));
             screenData.slides = [];
             ws.emit("message", "Slide Loop aggiornato");
             ws.broadcast.emit("updateScreenSetting", JSON.stringify({screenName: data['screenName'], screenData: screenData}));
             break;
 
         case 'updateCurrentSlide':
-            if (!fs.existsSync(screensDir + data['screenName'])) {
+            if (!fs.existsSync(path.join(screensDir, data['screenName']))) {
                 ws.emit("error", "Schermo inesistente");
                 break;
             }
-            var screenData = JSON.parse(fs.readFileSync(screensDir + data['screenName']));
+            var screenData = JSON.parse(fs.readFileSync(path.join(screensDir, data['screenName'])));
             let newCurrSlide;
             switch (data['command']){
                 case 'foward':
@@ -313,19 +313,19 @@ function serverMessageHandler(ws, action, data){
                     break;
             }
             screenData.currentSlide = newCurrSlide;
-            fs.writeFileSync(screensDir + data['screenName'], JSON.stringify(screenData, null, 2));
+            fs.writeFileSync(path.join(screensDir, data['screenName']), JSON.stringify(screenData, null, 2));
             ws.emit("message", "Scorrimento slide " + data['screenName']);
             serverSocketIO.sockets.emit("updateCurrentSlide", JSON.stringify({screenName: data['screenName'], slide: newCurrSlide}));
             break;
         
         case 'updateScreenTime':
-            if (!fs.existsSync(screensDir + data['screenName'])) {
+            if (!fs.existsSync(path.join(screensDir, data['screenName']))) {
                 ws.emit("error", "Schermo inesistente");
                 break;
             }
-            var screenData = JSON.parse(fs.readFileSync(screensDir + data['screenName']));
+            var screenData = JSON.parse(fs.readFileSync(path.join(screensDir, data['screenName'])));
             screenData.duration = data['duration'];
-            fs.writeFileSync(screensDir + data['screenName'], JSON.stringify(screenData, null, 2));
+            fs.writeFileSync(path.join(screensDir, data['screenName']), JSON.stringify(screenData, null, 2));
             screenData.slides = [];
             ws.emit("message", "Screen time aggiornato");
             ws.broadcast.emit("updateScreenSetting", JSON.stringify({screenName: data['screenName'], screenData: screenData}));
@@ -334,11 +334,11 @@ function serverMessageHandler(ws, action, data){
         case 'setTimer':
             console.log(data);
             if (data['value']){
-                if (!fs.existsSync(screensDir + data['screenName'])) {
+                if (!fs.existsSync(path.join(screensDir, data['screenName']))) {
                     ws.emit("error", "Schermo inesistente");
                     break;
                 }
-                var screenData = JSON.parse(fs.readFileSync(screensDir + data['screenName']));
+                var screenData = JSON.parse(fs.readFileSync(path.join(screensDir, data['screenName'])));
                 const screenDuration = screenData.duration;
                 const tempToken = createToken(6);
                 screenWithTimerOn[data['screenName']] = tempToken;
