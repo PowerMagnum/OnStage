@@ -17,7 +17,7 @@
 
 1. Clona questo repository nel tuo ambiente locale:
     ```bash
-    git clone https://github.com/tuo-username/OnStage.git
+    git clone git@github.com:PowerMagnum/OnStage.git
     cd OnStage
     ```
 
