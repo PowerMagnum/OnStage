@@ -3,10 +3,7 @@ const fileSelectorButton = document.getElementById('fileSelectorButton');
 
 fileSelectorButton.onclick = () => fileSelector.click();
 fileSelector.onchange = () => {
-    let name;
-    name = fileSelector.files[0].name;
-    name = (name.length < 20)? name : (name.substring(0, 17) + '...');
-    fileSelectorButton.innerText = '"' + name + '"';
+    uploadFile('Scegli un file');
 }
 
 function uploadFile(callerButton) {
@@ -15,8 +12,8 @@ function uploadFile(callerButton) {
         return;
     }
     if(fileSelector.files.length <= 0){
-        fileSelectorButton.style.animation = 'blink 0.75s linear 2';
-        setTimeout(() => fileSelectorButton.style.animation = '', 1500);
+        callerButton.style.animation = 'blink 0.75s linear 2';
+        setTimeout(() => callerButton.style.animation = '', 1500);
         return;
     }
 
@@ -28,7 +25,7 @@ function uploadFile(callerButton) {
     fileSelectorButton.innerText = "Scegli un file";
 
     const xhr = new XMLHttpRequest();
-    const button = document.getElementById(callerButton);
+    const button = fileSelectorButton;
 
     function resetButton(){
         button.style.transition = 'background 0.5s linear';
@@ -68,7 +65,6 @@ function uploadFile(callerButton) {
         button.innerText = 'Errore di rete durante il caricamento!';
     };
 
-    button.disabled = true;
     xhr.send(formData);
 }
 
@@ -77,6 +73,3 @@ function renewBackground(path){
     socket.emit("message", getCookie("code"), "updateSlideBackground", JSON.stringify({screenName:'Schermo' + thisScreen, slideId: selectedSlide, path: path}));
     console.log("Invio richiesta rinnovo sfondo slide");
 }
-
-document.getElementById('Carica_Sfondo').onclick = () => {uploadFile('Carica_Sfondo');};
-document.getElementById('Carica_Miniatura').onclick = () => {uploadFile('Carica_Miniatura')};
